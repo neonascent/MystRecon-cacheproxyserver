@@ -2,18 +2,17 @@
 
 // get guid
 $guid = htmlspecialchars($_GET["guid"]);
-//$guid = "65";
 
 //$REQUEST_BODY = '';
-$REQUEST_BODY  = '<?xml version="1.0" encoding="utf-8"?>'; 
-$REQUEST_BODY += '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">';
-$REQUEST_BODY += '  <soap:Body>';
-$REQUEST_BODY += '    <GetCollectionData xmlns="http://labs.live.com/">';
-$REQUEST_BODY += '      <collectionId>' + $guid + '</collectionId>';
-$REQUEST_BODY += '      <incrementEmbedCount>false</incrementEmbedCount>';
-$REQUEST_BODY += '    </GetCollectionData>';
-$REQUEST_BODY += '  </soap:Body>';
-$REQUEST_BODY += '</soap:Envelope>';
+$REQUEST_BODY  = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"; 
+$REQUEST_BODY .= "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">";
+$REQUEST_BODY .= "  <soap:Body>";
+$REQUEST_BODY .= "    <GetCollectionData xmlns=\"http://labs.live.com/\">";
+$REQUEST_BODY .= "      <collectionId>" . $guid . "</collectionId>";
+$REQUEST_BODY .= "      <incrementEmbedCount>false</incrementEmbedCount>";
+$REQUEST_BODY .= "    </GetCollectionData>";
+$REQUEST_BODY .= "  </soap:Body>";
+$REQUEST_BODY .= "</soap:Envelope>";
 
 
 		// from Henri Astre's PhotoSynth viewer
@@ -34,7 +33,7 @@ curl_setopt($soap_do, CURLOPT_SSL_VERIFYPEER, false);
 curl_setopt($soap_do, CURLOPT_SSL_VERIFYHOST, false);
 curl_setopt($soap_do, CURLOPT_POST,           true );
 curl_setopt($soap_do, CURLOPT_POSTFIELDS,    $REQUEST_BODY);
-curl_setopt($soap_do, CURLOPT_HTTPHEADER,     array('Content-Type: text/xml; charset=utf-8', 'SOAPAction: http://labs.live.com/GetCollectionData' ));
+curl_setopt($soap_do, CURLOPT_HTTPHEADER,     array('Content-Type: text/xml; charset=utf-8', 'SOAPAction: http://labs.live.com/GetCollectionData', 'Content-Length: '.strlen($REQUEST_BODY) ));
 
 $result = curl_exec($soap_do);
 if($result === false)
@@ -42,7 +41,7 @@ if($result === false)
 	$err = 'Curl error: ' . curl_error($soap_do);
 	curl_close($soap_do);
 	//return $err;
-	print $err;
+	print_r($err);
 }
 else
 {
@@ -52,6 +51,4 @@ else
 	header('Content-type: text/xml');
 	print $result;
 }
-
-
 ?>
